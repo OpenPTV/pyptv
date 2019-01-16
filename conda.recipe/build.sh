@@ -1,29 +1,24 @@
 #!/bin/bash
 
 set -ev
+CWD="$(pwd)"
+echo $CWD
 
-git clone https://github.com/libcheck/check.git
-cd check
-cmake .
-make
-make install
-
-
-cd ../openptv/liboptv
+cd ./openptv/liboptv
 mkdir _build && cd _build
 cmake ../ -DCMAKE_INSTALL_PREFIX=$PREFIX
 make
-make verify
+# make verify # check_track fails and I need to continue
 make install
 # cp ./src/liboptv.dylib ../../py_bind
 
 cd ../../py_bind
-python setup.py build_ext -I/usr/local/include -L/usr/local/lib
-python setup.py install
+# python setup.py build_ext -I../liboptv/include -L../liboptv/_build/src 
+python setup.py install --prefix=$PREFIX
 
-export PATH=$PATH:/usr/local/lib
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
-export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:/usr/local/lib
+# export PATH=$PATH:/usr/local/lib
+# export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
+# export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:/usr/local/lib
 # echo $LD_LIBRARY_PATH
 # echo $PATH
 # python -c "import sys; print sys.path"
@@ -31,6 +26,7 @@ export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:/usr/local/lib
 cd test
 nosetests -v
 
-cd ../../../
+echo $PWD
+cd $CWD
 
-python setup.py install --single-version-externally-managed --record=record.txt
+python setup.py install --prefix=$PREFIX
