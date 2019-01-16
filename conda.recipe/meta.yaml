@@ -8,16 +8,37 @@ source:
 build:
   # If the installation is complex, or different between Unix and Windows, use
   # separate bld.bat and build.sh files instead of this key.  Add the line
-  # skip: True  # [py>27]
-  # "skip: True  # [not win]" to limit to Windows.
-  script: python setup.py install --single-version-externally-managed --record=record.txt
+  skip: True  # [py>27]
+  skip: True  # [win]
 
 requirements:
   build:
-    - python
+    - git 
+    - cmake
+  host:
+    - python 2.7*
     - setuptools
+    - cython
+    - numpy
+    - nose
+    - pyyaml
   run:
-    - python
+    - python 2.7*
+    - pyyaml
+    - chaco
+    - enable
+    - kiwisolver
+    - {{ pin_compatible('numpy') }}
+    - scikit-image
+    - future
+    - matplotlib
+    - cython
+
+# test:
+#   imports:
+#     - optv
+#     - pyptv
+
 
 about:
   home: https://github.com/alexlib/pyptv
