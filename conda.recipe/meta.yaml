@@ -1,66 +1,24 @@
-# This file created by conda-build 3.17.6
-# meta.yaml template originally from:
-# /Users/alex/Downloads/tmp/pyptv/conda.recipe, last modified Wed Jan 16 21:50:04 2019
-# ------------------------------------------------
-
 package:
     name: pyptv
     version: 0.1.0
 source:
-    path: /Users/alex/Downloads/tmp/pyptv
+  git_url: https://github.com/alexlib/pyptv.git
+  git_tag: conda_build 
 build:
     binary_relocation: false
-    string: py27h39e3cac_0
 requirements:
-    build:
-        - bzip2 1.0.6 h1de35cc_1002
-        - ca-certificates 2018.11.29 ha4d7672_0
-        - check 0.12.0 h1de35cc_1001
-        - cmake 3.13.2 h1e01633_1000
-        - curl 7.63.0 heae2a1f_1000
-        - expat 2.2.5 h0a44026_1002
-        - gettext 0.19.8.1 hcca000d_1001
-        - git 2.20.1 pl526h28b1069_1000
-        - krb5 1.16.3 h24a3359_1000
-        - libcurl 7.63.0 h76de61e_1000
-        - libcxx 7.0.0 h2d50403_2
-        - libedit 3.1.20170329 hcfe32e1_1001
-        - libffi 3.2.1 h0a44026_1005
-        - libiconv 1.15 h1de35cc_1004
-        - libssh2 1.8.0 hf30b1f0_1003
-        - libuv 1.24.0 h1de35cc_1000
-        - llvm-meta 7.0.0 0
-        - ncurses 6.1 h0a44026_1002
-        - openssl 1.0.2p h1de35cc_1002
-        - perl 5.26.2 he63f669_1000
-        - rhash 1.3.6 h1de35cc_1001
-        - tk 8.6.9 ha441bb4_1000
-        - xz 5.2.4 h1de35cc_1001
-        - zlib 1.2.11 h1de35cc_1004
     host:
-        - blas 1.1 openblas
-        - ca-certificates 2018.11.29 ha4d7672_0
-        - certifi 2018.11.29 py27_1000
-        - cython 0.29.2 py27h0a44026_1000
-        - libcxx 7.0.0 h2d50403_2
-        - libffi 3.2.1 h0a44026_1005
-        - libgfortran 3.0.1 h93005f0_2
-        - llvm-meta 7.0.0 0
-        - ncurses 6.1 h0a44026_1002
-        - nose 1.3.7 py27_1002
-        - numpy 1.11.3 py27_blas_openblash4251c03_1205
-        - openblas 0.3.3 hdc02c5d_1001
-        - openssl 1.0.2p h1de35cc_1002
-        - pip 18.1 py27_1000
-        - python 2.7.15 h61312e0_1006
-        - pyyaml 3.13 py27h1de35cc_1001
-        - readline 7.0 hcfe32e1_1001
-        - setuptools 40.6.3 py27_0
-        - sqlite 3.26.0 h1765d9f_1000
-        - tk 8.6.9 ha441bb4_1000
-        - wheel 0.32.3 py27_0
-        - yaml 0.1.7 h1de35cc_1001
-        - zlib 1.2.11 h1de35cc_1004
+      - python
+      - numpy 1.10.2
+      - scipy
+      - matplotlib
+      - kiwisolver
+      - chaco
+      - enable
+      - future
+      - pyyaml
+      - openptv_c_lib
+      - openptv_py_wrapper
     run:
         - chaco
         - cython
@@ -68,8 +26,8 @@ requirements:
         - future
         - kiwisolver
         - matplotlib
-        - numpy >=1.11.3,<2.0a0
-        - python >=2.7,<2.8.0a0
+        - numpy
+        - python
         - pyyaml
         - scikit-image
 about:
