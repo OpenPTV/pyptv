@@ -40,6 +40,9 @@ test:
   source_files:
     - tests
   requires:
+    - openptv_c_lib
+    - openptv_py_wrapper
+    - pyptv
     - pytest
     - pytest-cov
   commands:
