@@ -6,6 +6,8 @@ source:
   git_tag: conda_build 
 build:
     binary_relocation: false
+    always_include_files:
+      - pyptv/*.py
 requirements:
     host:
       - python
@@ -30,6 +32,22 @@ requirements:
         - python
         - pyyaml
         - scikit-image
+        - openptv_c_lib
+        - openptv_py_wrapper
+app:
+  entry: python pyptv_gui.py
+test:
+  source_files:
+    - tests
+  requires:
+    - pytest
+    - pytest-cov
+  commands:
+    - pytest tests
+outputs:
+  - name: pyptv
+    files:
+      - pyptv/*.py
 about:
     home: https://github.com/alexlib/pyptv
     summary: Python GUI for the OpenPTV library `liboptv`
