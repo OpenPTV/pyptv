@@ -2,12 +2,15 @@ package:
     name: pyptv
     version: 0.1.0
 source:
-  git_url: https://github.com/alexlib/pyptv.git
-  git_tag: conda_build 
+  # git_url: https://github.com/alexlib/pyptv.git
+  # git_tag: conda_build 
+  path: ..
 build:
     binary_relocation: false
     always_include_files:
       - pyptv/*.py
+    script:
+      python setup.py install --single-version-externally-managed --record=record.txt
 requirements:
     host:
       - python
@@ -22,6 +25,7 @@ requirements:
       - openptv_c_lib
       - openptv_py_wrapper
     run:
+        - python
         - chaco
         - cython
         - enable
@@ -29,31 +33,25 @@ requirements:
         - kiwisolver
         - matplotlib
         - numpy
-        - python
         - pyyaml
         - scikit-image
         - openptv_c_lib
         - openptv_py_wrapper
-app:
-  entry: python pyptv_gui.py
 test:
   source_files:
     - tests
   requires:
-    - openptv_c_lib
-    - openptv_py_wrapper
-    - pyptv
     - pytest
     - pytest-cov
   commands:
     - pytest tests
-outputs:
-  - name: pyptv
-    files:
-      - pyptv/*.py
+# outputs:
+#   - name: pyptv
+#     files:
+#       - pyptv/*.py
 about:
     home: https://github.com/alexlib/pyptv
     summary: Python GUI for the OpenPTV library `liboptv`
-extra:
-    copy_test_source_files: true
-    final: true
+# extra:
+#     copy_test_source_files: true
+#     final: true
