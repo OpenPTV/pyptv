@@ -6,9 +6,9 @@ source:
   # git_tag: conda_build 
   path: ..
 build:
-  binary_relocation: false
-  always_include_files:
-    - pyptv/*.py
+  # binary_relocation: false
+  # always_include_files:
+  #   - pyptv/*.py
   script:
     python setup.py install --single-version-externally-managed --record=record.txt
 requirements:
