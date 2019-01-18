@@ -45,10 +45,10 @@ test:
     - pytest-cov
   commands:
     - pytest tests
-# outputs:
-#   - name: pyptv
-#     files:
-#       - pyptv/*.py
+outputs:
+  - name: pyptv
+    files:
+      - pyptv/*.py
 about:
     home: https://github.com/alexlib/pyptv
     summary: Python GUI for the OpenPTV library `liboptv`
