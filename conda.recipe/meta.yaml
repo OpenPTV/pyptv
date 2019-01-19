@@ -1,6 +1,6 @@
 package:
   name: pyptv
-  version: 0.1.0
+  version: 0.1.1
 source:
   # git_url: https://github.com/alexlib/pyptv.git
   # git_tag: conda_build 
@@ -12,26 +12,12 @@ build:
   script:
     python setup.py install --single-version-externally-managed --record=record.txt
 requirements:
-  build:
-    - python
   run:
-    - python
-    - chaco
-    - cython
-    - enable
-    - future
-    - kiwisolver
-    - matplotlib
-    - numpy
-    - pyyaml
-    - scikit-image
-    - openptv_c_lib
     - openptv_py_wrapper
 test:
   source_files:
     - tests
   requires:
-    - pyptv
     - pytest
     - pytest-cov
   commands:
