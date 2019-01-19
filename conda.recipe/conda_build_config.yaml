@@ -1,6 +1,6 @@
 python:
   - 2.7
 numpy:
-  - 1.9.3
+  - 1.10.2
 channel_sources:
   - conda-forge,alexlib,defaults
