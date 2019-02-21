@@ -1,6 +1,6 @@
 package:
   name: pyptv
-  version: 0.1.0
+  version: 0.2.2
 
 source:
   path: ..
@@ -14,10 +14,20 @@ build:
 
 requirements:
   build:
-    - python
+    - python=2.7
     - setuptools
   run:
     - python
+    - numpy==1.10
+    - scipy
+    - cython
+    - optv
+    - pyyaml
+    - chaco
+    - enable
+    - kiwisolver
+    - future
+    - scikit-image
 
 about:
   home: https://github.com/alexlib/pyptv
