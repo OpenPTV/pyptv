@@ -11,7 +11,6 @@ from __future__ import division
 import os
 import sys
 import time
-import yaml
 
 import numpy as np
 from traits.etsconfig.api import ETSConfig
