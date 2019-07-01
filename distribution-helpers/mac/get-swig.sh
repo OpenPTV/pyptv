@@ -14,8 +14,12 @@ tar xvzf swig-3.0.12.tar.gz
 
 echo Compiling SWIG
 cd swig-3.0.12
-./configure --prefix=/usr
+./configure --prefix=/Users/`whoami`/swig
 make
 
-echo SWIG is availabךe at `which swig`
+echo Installating swig at /Users/`whoami`/swig
+make install
+
+cd ~
+echo SWIG is available at `which swig`
 

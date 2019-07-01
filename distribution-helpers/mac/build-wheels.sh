@@ -6,8 +6,8 @@ if [ -d "~/ptv-build" ]; then
     exit 1
 fi
 
-mkdir ~/ptv-build
-mkdir ~/ptv-build/wheels
+mkdir -p ~/ptv-build
+mkdir -p ~/ptv-build/wheels
 
 cd ~/ptv-build
 python3 -m venv env
@@ -18,9 +18,9 @@ pip install numpy
 pip install cython
 
 # Set the path for Swig (don't forget to run get-swig before)
-export PATH=~/swig/swig-3.0.12:$PATH
+export PATH=~/Users/`whoami`/swig
+
 # enable
-#yum -y install mesa-libGLU-devel
  
 # Enable 4.7.2 uses old Cython, which doesn't support Python 3.7. They have a fix on master, but it wasn't released yet
 # Hopefully a future version of enable will include this fix and we'll just be able to use it
