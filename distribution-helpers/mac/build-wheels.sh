@@ -11,8 +11,10 @@ pip install wheel
 pip install numpy
 pip install cython
 
-# Set the path for Swig (don't forget to run get-swig before)
-export PATH=~/Users/`whoami`/ptv-build/swig
+# Install swig and python3
+brew install python3
+brew install swig@3
+export PATH="/usr/local/opt/swig@3/bin:$PATH"   # Necessary to add swig3 to the path
 
 # enable
  
