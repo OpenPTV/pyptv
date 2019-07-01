@@ -14,10 +14,11 @@ tar xvzf swig-3.0.12.tar.gz
 
 echo Compiling SWIG
 cd swig-3.0.12
-./configure --prefix=/Users/`whoami`/swig
+./configure --prefix=/Users/`whoami`/ptv-build/swig
 make
 
-echo Installating swig at /Users/`whoami`/swig
+echo Installating swig at /Users/`whoami`/ptv-build/swig
+mkdir -p ~/ptv-build/swig
 make install
 
 cd ~

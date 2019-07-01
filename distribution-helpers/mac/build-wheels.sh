@@ -1,11 +1,5 @@
 #!/bin/bash
 
-if [ -d "~/ptv-build" ]; then
-    echo This script recreates the ptv-build directory from scratch.
-    echo Please erase ~/ptv-build and start again
-    exit 1
-fi
-
 mkdir -p ~/ptv-build
 mkdir -p ~/ptv-build/wheels
 
@@ -18,7 +12,7 @@ pip install numpy
 pip install cython
 
 # Set the path for Swig (don't forget to run get-swig before)
-export PATH=~/Users/`whoami`/swig
+export PATH=~/Users/`whoami`/ptv-build/swig
 
 # enable
  
