@@ -3,11 +3,12 @@ from setuptools import setup
 requirements = [
 'chaco==4.8.0',
 'enable==4.8.1',
-'numpy==1.17.3',
+'numpy==1.17.4',
 'optv==0.2.6',
 'PyQt5==5.12.2',
 'scikit-image==0.16.2',
 'Pygments==2.4.2',
+'matplotlib==3.2.0rc1'
 ]
 
 setup(

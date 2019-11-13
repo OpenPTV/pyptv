@@ -10,15 +10,13 @@ mkdir ~/ptv-build
 mkdir ~/ptv-build/wheels
 
 cd ~/ptv-build
-python3 -m venv env
-source env/bin/activate
-pip install --upgrade pip
-pip install wheel
-pip install numpy
-pip install cython
+# python3 -m venv env
+# source env/bin/activate
+# pip install --upgrade pip
+conda install -y wheel numpy cython swig
 
 # Set the path for Swig (don't forget to run get-swig before)
-export PATH=~/swig/swig-3.0.12:$PATH
+# export PATH=~/swig/swig-3.0.12:$PATH
 # enable
 #yum -y install mesa-libGLU-devel
  
@@ -28,6 +26,8 @@ export PATH=~/swig/swig-3.0.12:$PATH
 git clone https://github.com/enthought/enable.git --branch 4.8.1
 
 cd enable
+
+git checkout 969c973 -- kiva/_cython_speedups.cpp
 
 python setup.py bdist_wheel
 

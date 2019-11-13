@@ -601,7 +601,7 @@ class TreeMenuHandler(traitsui.api.Handler):
         """
 
         extern_sequence = info.object.plugins.sequence_alg
-        if extern_sequence is not 'default':
+        if extern_sequence != 'default':
             try:
                 # change to pyptv folder, look for tracking module
                 sys.path.append(software_path)
@@ -624,7 +624,7 @@ class TreeMenuHandler(traitsui.api.Handler):
         """ track_no_disp_action uses ptv.py_trackcorr_loop(..) binding to call tracking without display
         """
         extern_tracker = info.object.plugins.track_alg
-        if extern_tracker is not 'default':
+        if extern_tracker != 'default':
             try:
                 os.chdir(software_path)  # change to software path, to load tracking module
                 track = __import__(extern_tracker)  # import choosen tracker from software dir
