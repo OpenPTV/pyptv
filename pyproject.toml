@@ -52,6 +52,7 @@ OpenPTV = "http://www.openptv.net"
 
 [project.scripts]
 pyptv = "pyptv.pyptv_gui:main"
+pyptv-tk = "pyptv.tk_gui.main:main"
 
 [tool.setuptools]
 packages = ["pyptv"]
