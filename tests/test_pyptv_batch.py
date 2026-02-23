@@ -322,69 +322,90 @@ def test_pyptv_batch_tracking_mode_only_with_temp_yaml_collect_results(test_data
     print(best)
 
 
-# def test_tracking_parameter_optimization(test_data_dir):
-#     """Optimize tracking parameters using scipy.optimize and compare results to original YAML."""
-#     test_dir = test_data_dir
-#     orig_yaml = test_dir / "parameters_Run1.yaml"
-#     start_frame = 10000
-#     end_frame = 10004
-#     res_dir = test_dir / "res"
+def optimize_tracking_parameters(test_data_dir):
+    """Optimize tracking parameters using scipy.optimize to minimize lost links and maximize avg_links."""
+    import tempfile
+    import shutil
+    import yaml
+    import re
+    import subprocess
+    import numpy as np
+    from scipy.optimize import minimize
 
-#     # Load original YAML
-#     with open(orig_yaml, 'r') as f:
-#         params = yaml.safe_load(f)
+    test_dir = test_data_dir
+    orig_yaml = test_dir / "parameters_Run1.yaml"
+    start_frame = 10000
+    end_frame = 10004  # Use only 2 frames for speed
+    res_dir = test_dir / "res"
+    if res_dir.exists():
+        shutil.rmtree(res_dir)
+    # Load original tracking parameters
+    with open(orig_yaml, 'r') as f:
+        params = yaml.safe_load(f)
+    track_params = params.get('track', {})
+    # Only optimize numeric parameters
+    param_names = [k for k, v in track_params.items() if isinstance(v, (int, float))]
+    orig_values = np.array([track_params[k] for k in param_names], dtype=float)
 
-#     orig_track = params.get('track', {})
-#     param_names = list(orig_track.keys())
-#     orig_values = [orig_track[k] for k in param_names if isinstance(orig_track[k], (int, float))]
-#     param_names = [k for k in param_names if isinstance(orig_track[k], (int, float))]
+    def loss_fn(x):
+        # Create temp YAML file with updated parameters
+        with tempfile.NamedTemporaryFile('w', delete=False, suffix='.yaml', dir=test_dir) as tmp:
+            temp_yaml = tmp.name
+            with open(orig_yaml, 'r') as orig_f:
+                orig_content = yaml.safe_load(orig_f)
+            for i, k in enumerate(param_names):
+                orig_content['track'][k] = float(x[i])
+            yaml.safe_dump(orig_content, tmp)
+        # Run sequence mode (to prep files)
+        pyptv_batch.main(temp_yaml, start_frame, end_frame, mode="sequence")
+        # Run tracking mode and capture output
+        with tempfile.NamedTemporaryFile('w+', delete=False, suffix='.txt', dir=test_dir) as out_file:
+            out_path = out_file.name
+            cmd = [sys.executable, '-m', 'pyptv.pyptv_batch', os.path.basename(temp_yaml), str(start_frame), str(end_frame), '--mode', 'tracking']
+            try:
+                subprocess.run(cmd, stdout=out_file, stderr=subprocess.STDOUT, check=True, cwd=test_dir)
+            except subprocess.CalledProcessError:
+                out_file.flush()
+                with open(out_path, 'r') as f:
+                    print("\n--- Subprocess output (optimization step) ---")
+                    print(f.read())
+                return 1e6  # Large penalty for failed run
+        # Parse output
+        avg_lost = avg_links = None
+        with open(out_path, 'r') as f:
+            for line in f:
+                m = re.search(r"Average over sequence, particles:\s*([\d\.-]+), links:\s*([\d\.-]+), lost:\s*([\d\.-]+)", line)
+                if m:
+                    avg_links = float(m.group(2))
+                    avg_lost = float(m.group(3))
+                    break
+        if avg_lost is None or avg_links is None:
+            return 1e5  # Penalty if output not found
+        # Loss: minimize lost, maximize links (weighted sum)
+        return avg_lost - 0.1 * avg_links
 
-#     def run_tracking_with_params(values):
-#         # Create temp YAML file as a copy of original
-#         with tempfile.NamedTemporaryFile('w', delete=False, suffix='.yaml') as tmp:
-#             temp_yaml = tmp.name
-#             # Copy original YAML content
-#             with open(orig_yaml, 'r') as orig_f:
-#                 orig_content = yaml.safe_load(orig_f)
-#             # Update params
-#             for k, v in zip(param_names, values):
-#                 orig_content['track'][k] = float(v)
-#             yaml.safe_dump(orig_content, tmp)
-#         print(f"Running tracking with parameters: {dict(zip(param_names, values))}")
-#         # Remove results dir
-#         if res_dir.exists():
-#             shutil.rmtree(res_dir)
-#         # Run tracking mode
-#         try:
-#             pyptv_batch.main(temp_yaml, start_frame, end_frame, mode="tracking")
-#         except Exception as e:
-#             print(f"Tracking failed: {e}")
-#             return float('inf')  # Penalize failed runs
-#         # Evaluate result: e.g., sum of correspondences in rt_is files
-#         total_points = 0
-#         for frame in range(start_frame, end_frame+1):
-#             fpath = res_dir / f"rt_is.{frame}"
-#             if fpath.exists():
-#                 with open(fpath) as f:
-#                     lines = f.readlines()
-#                     if lines:
-#                         try:
-#                             total_points += int(lines[0])
-#                         except Exception:
-#                             pass
-#         return -total_points  # Negative for minimization
+    # Run optimization with multiple random restarts to escape local minima
+    best_result = None
+    n_restarts = 2  # Fewer restarts for speed
+    for i in range(n_restarts):
+        # Randomize initial values within ±20% of original
+        x0 = orig_values * (0.8 + 0.4 * np.random.rand(*orig_values.shape))
+        result = minimize(loss_fn, x0, method='Powell', options={'maxiter': 30, 'disp': True})
+        print(f"\nRestart {i+1}: loss={result.fun}, params={result.x}")
+        if best_result is None or result.fun < best_result.fun:
+            best_result = result
+    best_values = best_result.x
+    best_loss = best_result.fun
+    print("\nOptimization result (best of restarts):")
+    print(f"Best parameters: {dict(zip(param_names, best_values))}")
+    print(f"Best loss: {best_loss}")
+    print(f"Original values: {dict(zip(param_names, orig_values))}")
+    assert best_result.success, f"Optimization failed: {best_result.message}"
 
-#     # Run original for baseline
-#     baseline = run_tracking_with_params(orig_values)
 
-#     # Optimize
-#     result = minimize(run_tracking_with_params, orig_values, method='Nelder-Mead')
-#     best_values = result.x
-#     best_score = result.fun
-
-#     print(f"Original score: {-baseline}, Optimized score: {-best_score}")
-#     print(f"Best parameters: {dict(zip(param_names, best_values))}")
-#     assert -best_score >= -baseline, "Optimization should not degrade results"
+def test_optimize_tracking_parameters(test_data_dir):
+    """Test optimization of tracking parameters using gradient descent."""
+    optimize_tracking_parameters(test_data_dir)
 
 
 if __name__ == "__main__":
