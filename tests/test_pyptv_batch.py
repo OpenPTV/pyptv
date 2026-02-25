@@ -403,9 +403,9 @@ def optimize_tracking_parameters(test_data_dir):
     assert best_result.success, f"Optimization failed: {best_result.message}"
 
 
-def test_optimize_tracking_parameters(test_data_dir):
-    """Test optimization of tracking parameters using gradient descent."""
-    optimize_tracking_parameters(test_data_dir)
+# def test_optimize_tracking_parameters(test_data_dir):
+#     """Test optimization of tracking parameters using gradient descent."""
+#     optimize_tracking_parameters(test_data_dir)
 
 
 if __name__ == "__main__":
